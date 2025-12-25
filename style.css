@@ -1,0 +1,11 @@
+h1{
+    color: greenyellow;
+    font-family: cursive;
+}
+
+input{
+    border: 1px solid blueviolet;
+    color: gainsboro;
+    background-color: rgb(179, 126, 229);
+}
+

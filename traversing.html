@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <title>Traversing methods</title>
+    <style>
+        h1{
+            text-align: center;
+            color: rgb(213, 8, 8);
+        }
+
+        .main-outer{
+            height: 600px;
+            width: 600px;
+            border: 2px solid black;
+            background-color: aquamarine;
+            margin: auto;
+        }
+
+        .outer{
+            height: 500px;
+            width: 550px;
+            border: 2px solid black;
+            background-color: lightgreen;
+            margin: auto;
+        }
+
+        .inner{
+            height: 400px;
+            width: 450px;
+            border: 2px solid black;
+            background-color: royalblue;
+            margin: auto;
+        }
+
+        #box1, #box2, #box3, #box4, #box5{
+            height: 50px;
+            width: 50px;
+            border: 2px solid black;
+            background-color: red;
+            text-align: center;
+            padding:  8px;
+        }
+    </style>
+</head>
+<body>
+    
+    <h1>Traversing Methods</h1>
+
+    <div class="main-outer">
+        <h2>Main-outer</h2>
+        <div class="outer">
+            <h2>Outer</h2>
+            <div class="inner">
+                <h2>Inner</h2>
+                <div id="box1">A</div>
+                <div id="box2">B</div>
+                <div id="box3">C</div>
+                <div id="box4">D</div>
+                <div id="box5">E</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            $('.inner').parent().css('backgroundColor',' yellow');
+
+            $('.main-outer').nextAll().css('backgroundColor', 'orange');
+
+        })
+    </script>
+</body>
+</html>

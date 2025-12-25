@@ -1,0 +1,887 @@
+<h3 id="question-1">Question 1</h3>
+<pre><code>Promise.resolve().then(()=&gt; console.log(1));
+
+queueMicrotask(()=&gt; console.log(2));
+
+setTimeout(()=&gt; console.log(3), 0);
+
+console.log(4);
+
+new Promise(() =&gt; console.log(5));
+
+(async () =&gt; console.log(6))();
+</code></pre>
+<details>
+  <summary>Answer</summary>
+  
+<pre><code>4
+5
+6
+1
+2
+3
+</code></pre>
+<p>  microtaskQueue = [];
+  macrotaskQueue = [];</p>
+<p>  When the above code runs, resolved promise will be added to microtaskQueue,</p>
+<p>  then queueMictrotask will also get added to microtaskQueue,</p>
+<p>  setTimeOut will added to macrotaskQueue,</p>
+<p>  console.log(4); will be logged immeditaley</p>
+<p>  new Promise(()=&gt; console.log(5)) the callback function passed to Promise function is executed immediatley.</p>
+<p>  this is an IIFE (async () =&gt; console.log(6))(); it will get executed immeditaley.</p>
+<p>  After this One Event loop cycle is over, and when Event loop executes its seonds cycle, First microtaskQueue will be exeucted and then macrotaskQueue.</p>
+</details>
+
+<a href="https://topmate.io/frontendmaster/671812">Get Complete Frontend Interview Kit - by Me</a>
+<h3 id="queston-2">Queston 2</h3>
+<p>Which of the following are not a microtask in Javascript.</p>
+<pre><code> A. setTimeout
+ B. requestAnimationFrame
+ D. MouseMove event
+ E. fetch calls
+ D. then callbacks
+</code></pre>
+<details>
+    <summary>Answer</summary>
+    
+<pre><code>Only then callbacks are microtask out of all above list items.
+</code></pre>
+</details>
+
+<a href="https://allahabadi.dev">3 Month Frontend Training - Job Oriented</a>
+<h3 id="question-3">Question 3</h3>
+<p>What be logged in console?</p>
+<pre><code>
+    function show() {
+        console.log(typeof arguments, Array.isArray(arguments));
+    }
+
+    show();
+</code></pre>
+<details>
+    <summary>Answer</summary>
+    
+ 
+<pre><code>4
+object false
+
+arguments is not array, its array like object.
+</code></pre>
+</details>
+
+<a href="https://topmate.io/frontendmaster/671812">Get Complete Frontend Interview Kit - by Me</a>
+<h3 id="question-4">Question 4</h3>
+<p>What will be logged in console?</p>
+<pre><code>(async ()=&gt; {
+const asyncFunc = async () =&gt; &quot;asyncFunc&quot;;
+
+
+ const promise = new Promise(res =&gt; {
+         console.log(&quot;promise&quot;);
+ }).then(()=&gt; console.log(&quot;then&quot;))
+ 
+ console.log(&quot;async bodyk&quot;);
+ 
+ queueMicrotask(() =&gt; {
+      console.log(&quot;queueMicrotask&quot;);
+ });
+ 
+ await Promise.all([asyncFunc(), promise]);
+})();
+
+console.log(&quot;sripts&quot;);
+</code></pre>
+<details>
+    <summary> Answer</Summary>
+
+        <pre><code>
+promise
+async bodyk
+sripts
+queueMicrotask
+        </code></pre>
+</details>
+
+<a href="https://topmate.io/frontendmaster/671812">Get Complete Frontend Interview Kit - by Me</a>
+<h3 id="question-5">Question 5</h3>
+<p>What will be logged in console?</p>
+<pre><code>const outerFunc = ()=&gt; {
+    let count = 0;
+    return ()=&gt; ++count;
+}
+
+const counter = outerFunc();
+console.log(counter());
+console.log(counter());
+</code></pre>
+<details>
+    <summary> Answer</Summary>
+    
+<pre><code>1 2
+
+outerFunc() function call won&#39;t execute the returned function, it will simply return a function.
+
+First counter() call, increase the count and return 1
+Second counter() call, increase the count and return 2
+</code></pre>
+</details>
+
+<a href="https://allahabadi.dev">3 Month Frontend Training - Job Oriented</a>
+<h3 id="question-6">Question 6</h3>
+<p>What will be logged in console?</p>
+<pre><code>function createCounter() {
+    let globalCount = 0;
+
+    function incrementCount() {
+        let incrementValue = ++globalCount;
+        return incrementValue;
+    }
+
+    return {incrementCount}
+}
+
+const counter = createCounter();
+
+console.log(counter.incrementCount());
+console.log(counter.incrementCount());
+console.log(createCounter().incrementCount());
+</code></pre>
+<details>
+    <summary> Answer</Summary>
+    
+<pre><code>1 2 1
+
+createCounter() function call won&#39;t execute the returned function, it will simply return a function incrementCount
+
+First incrementCount() call, increase the globalCount and return 1
+Second incrementCount() call, increase the globalCount and return 2
+createCounter() call creates a new instance, which as globalCount 0, and when we call incrementCount it will increment to 1 and return it.
+</code></pre>
+</details>
+
+<h3 id="question-7">Question 7</h3>
+<p>What will be logged in console?</p>
+<pre><code>function createCounter(initialCount) {
+    let count = initialCount;
+
+    return function() {
+        &quot;use strict&quot;;
+        count += 1;
+        return count;
+    }
+}
+
+const counter = createCounter(10);
+
+counter();
+counter();
+console.log(counter());
+</code></pre>
+<details>
+    <summary> Answer</Summary>
+    
+<pre><code>13
+
+createCounter() function call won&#39;t execute the returned function, it will simply return a function
+
+First counter() call, increase the count and return 11
+Second counter() call, increase the globalCount and return 12
+Third counter() call increase the globalCount and return 13, which will be logged
+</code></pre>
+</details>
+
+<a href="https://allahabadi.dev">3 Month Frontend Training - Job Oriented</a>
+<h3 id="question-8">Question 8</h3>
+<p>What will the result of this comparison? true or false.</p>
+<pre><code>function createUser(username) {
+    return {name: username}
+}
+
+createUser(&#39;allahabadi.dev&#39;) === createUser(&#39;allahabadi.dev&#39;);
+</code></pre>
+<details>
+    <summary> Answer</Summary>
+        False
+        
+<pre><code> Objects in JS works on references basis, here we are creating two separate objects, whose reference will be different.
+</code></pre>
+</details>
+
+
+<a href="https://topmate.io/frontendmaster/671812">Get Complete Frontend Interview Kit - by Me</a>
+<h3 id="question-9">Question 9</h3>
+<p>Which statement is correct?</p>
+<pre><code>A - Hoisting is the process of moving funcitons and variables to the top of the File.
+B - Variables declared with let and const are hoisted.
+C - Variables declared with the var keyword are uninitialized
+D - Hoisting occurs during the execution phase
+E - import declarations are hoisted
+</code></pre>
+<details>
+    <summary> Answer</Summary>
+        A - False - No code is moved, hoisiting is simply a process where at compile time variables get assigned default value.
+B - True: Let and Const are also hoisted, but the fact is they don't get initialised unlike var, that's when we try to access them we get error, and this concept is called Temporal Dead Zone.
+C - False: Variable declared with var are initialised with undefined
+D - False: Hoisting occurs at compile phase
+E - True: All imports are hoisted.
+</details>
+
+<a href="https://topmate.io/frontendmaster/671812">Get Complete Frontend Interview Kit - by Me</a>
+<h3 id="question-10">Question 10</h3>
+<p>What will be logged in console?</p>
+<pre><code>function myfavFruit(input) {
+    switch(input) {
+        case &#39;orange&#39;:
+                const color = &quot;orange&quot;;
+                console.log(color);
+                break;
+        case &#39;lemon&#39;:
+                const color = &quot;lime&quot;;
+                console.log(color);
+                break;
+        default:
+                console.log(&#39;no color&#39;);
+    }
+}
+
+
+myfavFruit(&quot;orange&quot;);
+</code></pre>
+<details>
+    <summary> Answer</Summary>
+        Syntax Error
+        
+<pre><code>    we can not have two variables with same name in a block scope, when variables are declared with const.
+    
+    To solve this: either use var or wrap case in curly braces
+    
+    Solution 1:
+    
+
+    function myfavFruit(input) {
+switch(input) {
+    case &#39;orange&#39;:
+            var color = &quot;orange&quot;;
+            console.log(color);
+            break;
+    case &#39;lemon&#39;:
+            var color = &quot;lime&quot;;
+            console.log(color);
+            break;
+    default:
+            console.log(&#39;no color&#39;);
+} }
+
+
+Solution 2
+
+  function myfavFruit(input) {
+    switch(input) {
+     case &#39;orange&#39;:
+            {
+            const color = &quot;orange&quot;;
+            console.log(color);
+            break;
+            }
+     case &#39;lemon&#39;:
+           {
+            const color = &quot;lime&quot;;
+            console.log(color);
+            break;
+           }
+     default:
+            console.log(&#39;no color&#39;);
+     }
+}
+</code></pre>
+<p>myfavFruit(&quot;orange&quot;);</p>
+</details>
+
+
+<a href="https://allahabadi.dev">Master Frontend Tech Stack of 2024 in 3Months</a>
+<h3 id="question-11">Question 11</h3>
+<p>What will be logged in console?</p>
+<pre><code>function logThis() {
+    console.log(this);
+}
+
+const obj = {
+    logThis,
+    logThis2() {
+        return logThis();
+    },
+    logThis3() {
+        return obj.logThis();
+    }
+}
+
+obj.logThis(); 
+obj.logThis2();
+obj.logThis3();
+</code></pre>
+<details>
+    <summary> Answer</Summary>
+    
+<pre><code>   {
+   logThis: ƒ logThis()
+   logThis2 : ƒ logThis2()
+   logThis3 : ƒ logThis3()
+   }
+   
+   Window Object
+   
+   {
+   logThis: ƒ logThis()
+   logThis2 : ƒ logThis2()
+   logThis3 : ƒ logThis3()
+   }
+   
+ 
+   [Learn how this works](https://www.youtube.com/watch?v=vZ1wfTExGNk&amp;ab_channel=FrontendMaster)
+   
+</code></pre>
+</details>
+
+<a href="https://allahabadi.dev">Master Frontend Tech Stack of 2024 in 3Months</a>
+<h3 id="question-12">Question 12</h3>
+<p>What will be logged in console?</p>
+<pre><code>const objA = {
+    foo() {
+        console.log(this)
+    },
+    bar:()=&gt; console.log(this),
+}
+
+const objB = {
+    foo:objA.foo,
+    bar:()=&gt; objA.bar(),
+    baz() {objA.foo()}
+}
+
+objB.foo();
+objB.bar();
+objB.baz();
+</code></pre>
+<details>
+    <summary> Answer</Summary>
+    
+<pre><code>   ObjB
+   Window
+   ObjA
+ 
+    [ this inside arrow function] https://www.youtube.com/watch?v=btcbDS871mU&amp;ab_channel=FrontendMaster
+   [Learn how this works](https://www.youtube.com/watch?v=vZ1wfTExGNk&amp;ab_channel=FrontendMaster)
+   
+</code></pre>
+</details>
+
+<a href="https://allahabadi.dev">Master Frontend Tech Stack of 2024 in 3Months</a>
+<h3 id="question-13">Question 13</h3>
+<p>What will be logged in console?</p>
+<pre><code>function logThis() {
+    console.log(this);
+}
+
+const obj1 = {
+    foo:logThis,
+    bar: ()=&gt; logThis(),
+    baz() {logThis()},
+    qux() {logThis.call(this)}
+}
+
+const obj2 = {...obj1, foo2: ()=&gt; obj1.foo()};
+
+for(const key in obj2) {
+    obj2[key]();
+}
+</code></pre>
+<details>
+    <summary> Answer</Summary>
+    
+<pre><code>   Obj2
+   Window
+   Window
+   Obj2
+   Obj1
+ 
+    [ this inside arrow function] https://www.youtube.com/watch?v=btcbDS871mU&amp;ab_channel=FrontendMaster
+   [Learn how this works](https://www.youtube.com/watch?v=vZ1wfTExGNk&amp;ab_channel=FrontendMaster)
+   
+</code></pre>
+</details>
+
+<a href="https://topmate.io/frontendmaster/671812">Get Complete Frontend Interview Kit - by Me</a>
+<h3 id="question-14">Question 14</h3>
+<p>What will be logged in console?</p>
+<pre><code>function logThis() {
+    console.log(this);
+}
+
+const obj1 = {
+   logThis,
+   logThisInArrow: () =&gt; console.log(this),
+   logThisNested() {
+    const nestedFunc = ()=&gt; console.log(this);
+    nestedFunc()
+   }
+}
+
+
+obj1.logThis();
+obj1.logThisInArrow();
+obj1.logThisNested();
+</code></pre>
+<details>
+    <summary> Answer</Summary>
+    
+<pre><code>   Obj1
+   Window
+   Obj1
+ 
+    [ this inside arrow function] https://www.youtube.com/watch?v=btcbDS871mU&amp;ab_channel=FrontendMaster
+   [Learn how this works](https://www.youtube.com/watch?v=vZ1wfTExGNk&amp;ab_channel=FrontendMaster)
+   
+</code></pre>
+</details>
+
+
+<a href="https://topmate.io/frontendmaster/671812">Get Complete Frontend Interview Kit - by Me</a>
+<h3 id="question-15">Question 15</h3>
+<p>What will be logged in console?</p>
+<pre><code>const obj = {
+    logThis() {
+        console.log(this)
+    },
+    logThis2() {
+        function logThisInner() {
+            console.log(this);
+        }
+
+        return logThisInner.apply(this);
+    }
+}
+
+const {logThis, logThis2} = obj;
+
+logThis();
+logThis2();
+obj.logThis();
+obj.logThis2();
+</code></pre>
+<details>
+    <summary> Answer</Summary>
+    
+<pre><code>   Window
+   Window
+   Obj
+   Obj
+ 
+    [ this inside arrow function] https://www.youtube.com/watch?v=btcbDS871mU&amp;ab_channel=FrontendMaster
+   [Learn how this works](https://www.youtube.com/watch?v=vZ1wfTExGNk&amp;ab_channel=FrontendMaster)
+   
+</code></pre>
+</details>
+
+
+<h3 id="question-16">Question 16</h3>
+<p>creating a new User instance would create a new login function in memory eah timee?</p>
+<p>True or False?</p>
+<pre><code>class User() {
+
+    constructor(name) {
+        this.name = name;
+    }
+
+    login() {
+        // some code
+    }
+}
+
+const usr1 = new User(&#39;X&#39;);
+const usr2 = new User(&#39;Y&#39;);
+</code></pre>
+<details>
+    <summary> Answer</Summary>
+    
+<pre><code> False
+ 
+ login method will be added in prototype key.
+ 
+ User.prototype, hence both Object will point to same instane of login.
+   
+</code></pre>
+</details>
+<a href="https://allahabadi.dev">3 Month Frontend Training - Job Oriented</a>
+
+<h3 id="question-17">Question 17</h3>
+<p>Which statements are true about this code:</p>
+<pre><code class="language-class">    constructor(name) {
+        this.username = username;
+        this.wagTail = ()=&gt; {
+            return &#39;Running Tail&#39;
+        }
+    }
+
+    bark() {
+        return &quot;Bhau bhau&quot;;
+    }
+}
+
+const dog1 = new Dog(&quot;Sheru&quot;);
+const dog2 = new Dog(&quot;moti&quot;);
+
+
+Statements:
+
+A - dog1.wagTail() === dog2.wagTail()
+B - dog1.wagTail === dog2.wagTail
+C - dog1.bark === dog2.bark
+D - Object.getPrototypeOf(dog1) === Object.getPrototypeOf(dog2);
+E - dog1.constructor === dog2.constructor
+</code></pre>
+<details>
+    <summary> Answer</Summary>
+    
+<pre><code> A - True
+ B - False
+ C - True
+ D - True
+ E - True
+   
+</code></pre>
+</details>
+
+
+<h3 id="question-18">Question 18</h3>
+<p>What will be logged in console?</p>
+<pre><code>class Counter {
+    constructor(initialCount=0) {
+        this.count = initialCount;
+    }
+
+    increment() {
+        return this.count++;
+    }
+}
+
+const counterOne = new Counter(1);
+counterOne.increment();
+
+const counterTow = Object.create(counterOne);
+counterTow.increment();
+
+console.log(
+    counterOne.count,
+    counterTow.count
+);
+</code></pre>
+<details>
+    <summary> Answer</Summary>
+    
+<pre><code> 2, 3
+ 
+ When we create an Object using Object.create, we get a new Objet, but its prototype will be linked to passed object.
+ 
+ Here counterOne is linked to CounterTow.
+ 
+ When we call counterTow.increment() , we modify counterOne Object.
+   
+</code></pre>
+</details>
+
+
+<h3 id="question-19">Question 19</h3>
+<p>What will be logged in console?</p>
+<pre><code>class Chamelon {
+    constructor(color=&quot;green&quot;) {
+        this.color = color;
+    }
+
+    static changeColor(newColor) {
+        this.color = newColor;
+        console.log(this.color);
+    }
+}
+
+const liz = new Chamelon(&quot;green&quot;);
+liz.changeColor(&quot;purple&quot;);
+</code></pre>
+<details>
+    <summary> Answer</Summary>
+    
+<pre><code>TypeError: app.js:13 Uncaught TypeError: liz.changeColor is not a function
+at app.js:13:5
+
+We can only access static method on Class itself, not its instances.
+   
+</code></pre>
+</details>
+<a href="https://allahabadi.dev">3 Month Frontend Training - Job Oriented</a>
+
+<h3 id="question-20">Question 20</h3>
+<p>Which statements are true?</p>
+<pre><code>class User{
+    constructor(name) {
+        this.name = name;
+    }   
+
+    login() {
+        // some code
+    }
+}
+const user = new User(&#39;Freddy&#39;);
+
+
+Statements:
+
+A. Object.getPrototypeOf(user) === User.prototype;
+
+B. Object.getPrototypeOf(user) === Object.getPrototypeOf(User);
+
+C. user.prototype === User.prototype;
+
+D. Object.getPrototypeOf(user) === User.construtor;
+</code></pre>
+<details>
+    <summary> Answer</Summary>
+    
+<pre><code>A. true
+B. false
+C. false
+D. false
+   
+</code></pre>
+</details>
+
+<h3 id="question-21">Question 21</h3>
+<p>What will be logged in console?</p>
+<pre><code>function* count() {
+    yield 1;
+    yield 2;
+    yield 3;
+}
+
+for(const value of count()) {
+    console.log(value);
+}
+</code></pre>
+<details>
+    <summary> Answer</Summary>
+    
+<pre><code>1
+2
+3
+
+A generator function is a special type of function that can be paused and resumed, allowing you to produce a sequence of values over time.
+</code></pre>
+<p>In this specific case, the count generator function is defined to yield the values 1, 2, and 3. The for...of loop is then used to iterate over the values produced by the generator and log each value to the console.</p>
+<p>Here&#39;s a step-by-step explanation:</p>
+<p>The count generator function is called, creating a generator object.</p>
+<p>The for...of loop is used to iterate over the values produced by the generator.</p>
+<p>The first call to value inside the loop triggers the generator function to execute until it encounters the first yield statement, which yields the value 1.</p>
+<p>The value 1 is logged to the console.</p>
+<p>The generator function is paused.</p>
+<p>The second iteration of the loop triggers the generator function to resume execution from where it was paused. It continues until it encounters the next yield statement, which yields the value 2.</p>
+<p>The value 2 is logged to the console.</p>
+<p>The generator function is paused again.</p>
+<p>The third iteration of the loop triggers the generator function to resume execution, and it continues until it encounters the next yield statement, which yields the value 3.</p>
+<p>The value 3 is logged to the console.</p>
+<p>The generator function is paused for the final time.</p>
+<p>The loop completes because there are no more values to be produced by the generator.</p>
+</details>
+<a href="https://allahabadi.dev">3 Month Frontend Training - Job Oriented</a>
+
+<h3 id="question-22">Question 22</h3>
+<pre><code>When will inner funtion be eligible for garbage collection?
+
+funtion outer() {
+    return funtion inner() {
+        console.log(&quot;Inner Function&quot;);
+    }
+}
+
+const outerFunction = outer();
+
+
+
+A. By Invoking outerFunction
+B. By explicitly setting outerFunction to null
+C. It is automatically gargbage collected right after outer is called
+D. It depends on the javascript engine&#39;s garbage colletion strategies
+</code></pre>
+<details>
+    <summary> Answer</Summary>
+    
+<pre><code>B. By explicitly setting outerFunction to null
+</code></pre>
+</details>
+<a href="https://topmate.io/frontendmaster/671812">Get Complete Frontend Interview Kit - by Me</a>
+
+<h3 id="question-23">Question 23</h3>
+<pre><code>Which statements are true regarding this code snippet?
+
+let obj = {a: {b: 1}};
+
+let ref = obj.a;
+
+obj = null;
+
+A. The object {b:1} will be garbage collected
+B. ref still references {b:1}, so It won&#39;t be garbage collected
+C. The entire obj object is retained in memory due to the reference in ref
+D. Setting obj to null frees all memory associated with it
+</code></pre>
+<details>
+    <summary> Answer</Summary>
+    
+<pre><code>B. ref still references {b:1}, so It won&#39;t be garbage collected
+</code></pre>
+</details>
+<a href="https://topmate.io/frontendmaster/671812">Get Complete Frontend Interview Kit - by Me</a>
+
+<h3 id="question-24">Question 24</h3>
+<pre><code>You can get a list of all keys in a WeakMap using its keys method,
+but you can not get its value.
+
+This statement is True or False?
+</code></pre>
+<details>
+    <summary> Answer</Summary>
+    
+<pre><code>False: we cannot access anything on WeakMap.
+</code></pre>
+<p>The WeakMap object in JavaScript does not have a keys method because of the design principles and use cases associated with WeakMap. The purpose of WeakMap is to provide a mechanism for creating a collection of key-value pairs where the keys are weakly referenced. Here are some key reasons why WeakMap does not have certain methods like keys, values, or entries:</p>
+<p>Privacy and Security:
+WeakMap is designed to be a more private and secure way of associating data with objects. The lack of direct access to keys or values helps prevent unintended access to or interference with the contents of the map.</p>
+<p>Garbage Collection:
+The weakly held nature of WeakMap allows keys to be garbage collected if there are no other references to those keys. Directly exposing all keys or values through methods like keys or values could potentially prevent keys from being garbage collected, defeating the purpose of using a weak reference.</p>
+<p>Use Case:
+WeakMap is often used in scenarios where you want to associate additional data with objects without preventing those objects from being garbage collected. It is particularly useful in situations where the relationship between the key and </p>
+</details>
+<a href="https://topmate.io/frontendmaster/671812">Get Complete Frontend Interview Kit - by Me</a>
+
+<h3 id="question-25">Question 25</h3>
+<pre><code>When will eah user be eligible for garbage collection?
+
+function myFn() {
+    for(let i=0;i&lt;3;i++) {
+        const user = {n:&#39;X&#39;};
+
+        return user;
+    }
+}
+
+A. Immeditaley after each iteration.
+B. After the loop completes.
+C. Only if explicitly set to null within the loop.
+D. When the function containing the loop finishes the execution.
+</code></pre>
+<details>
+    <summary> Answer</Summary>
+    
+<pre><code>A. Immeditaley after each iteration.
+</code></pre>
+</details>
+
+
+<h3 id="question-26">Question 26</h3>
+<p>What will be logged in console?</p>
+<pre><code>const obj = {
+    bar() {
+        console.log(this);
+    }
+}
+
+setTimeout(()=&gt; obj.bar(), 0);
+
+queueMicrotask(()=&gt; {
+    delete obj.bar;
+});
+</code></pre>
+<details>
+    <summary> Answer</Summary>
+    
+<p>   TypeError: Because queueMicrotask will delete it, and when setTimeout callback access, it will not get bar function.</p>
+</details>
+
+<h3 id="question-27">Question 27</h3>
+<p>What will be logged in console?</p>
+<pre><code>const a = isNaN(&quot;5.2&quot;, + 2);
+const b = isNaN(parseInt(a));
+const c = isNaN(parseFloat(a));
+const d = isNaN(&quot;1 *2&quot; * 2);
+
+console.log(a,b,c,d);
+</code></pre>
+<details>
+    <summary> Answer</Summary>
+    
+<p>   false true true true</p>
+<p>   const a = isNaN(&quot;5.22&quot;); // false</p>
+<p>   const a = false;</p>
+<p>   const b = isNaN(parseInt(false)); // parseInt(false) =&gt; NaN
+   const b = isNaN(NaN) // true</p>
+<p>   const c = isNaN(parseFloat(false)); // parseFloat(false) =&gt; NaN
+   const c = isNaN(NaN) // true</p>
+<p>   const d = isNaN(&quot;1 *2&quot; * 2); // isNaN(NaN) // true</p>
+</details>
+<a href="https://allahabadi.dev">3 Month Frontend Training - Job Oriented</a>
+
+<h3 id="question-28">Question 28</h3>
+<p>What will be logged in console?</p>
+<pre><code>const array = [1,2,3,4,5];
+
+array.splice(2);
+array.concat(6);
+array.slice(0,1);
+delete array[0];
+
+console.log(array.length);
+</code></pre>
+<details>
+    <summary> Answer</Summary>
+    
+<p>   2</p>
+<p>const array = [1,2,3,4,5]; </p>
+<p>array.splice(2); // [1,2] modifies the array</p>
+<p>array.concat(6); // [1,2] does not modifies the array</p>
+<p>array.slice(0,1); // does not modifies the array</p>
+<p>delete array[0]; // delete element, but not remove the space</p>
+</details>
+<a href="https://allahabadi.dev">3 Month Frontend Training - Job Oriented</a>
+
+<h3 id="question-29">Question 29</h3>
+<p>What will be logged in console?</p>
+<pre><code>const {a = &#39;default&#39;,
+       b=&#39;default&#39;, 
+       c=&#39;default&#39;, 
+       d=&#39;default&#39;,
+       e=&#39;default&#39;} = {a:null, b:undefined, c:false, d:0}
+
+console.log(a,b,c,d)
+</code></pre>
+<details>
+    <summary> Answer</Summary>
+    
+<p>null &#39;default&#39; false 0</p>
+<p>Default value only get assigned in case of undefined</p>
+</details>
+
+
+<a href="https://topmate.io/frontendmaster/671812">Get Complete Frontend Interview Kit - by Me</a>
+<h3 id="question-30">Question 30</h3>
+<p>What will be logged in console?</p>
+<pre><code>console.log(21.toString());
+</code></pre>
+<details>
+    <summary> Answer</Summary>
+    
+<p>Error will be thrwon in the console:</p>
+<p>Uncaught SyntaxError: identifier starts immediately after numeric literal</p>
+<p>This is due to language grammar limitation.
+The dot(.) character could mean different things in JS. It can be seen as the member operator, or a decimal, depending on its placement.</p>
+<p>In order to make above code work we have to either use parenthesis or an additional dot to make the expression valid.</p>
+<p>21..toString(); // &quot;21&quot;;</p>
+<p>(21).toString(); // &quot;21&quot;;</p>
+</details>
+<a href="https://topmate.io/frontendmaster/671812">Get Complete Frontend Interview Kit - by Me</a>
